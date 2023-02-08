@@ -3,5 +3,5 @@ from . import views
 
 
 urlpatterns = [
-    # add allauth instead of registration
+    path('profile', views.profile, name='account_profile'),
 ]
