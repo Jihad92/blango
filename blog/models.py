@@ -5,25 +5,28 @@ from django.conf import settings
 
 # Create your models here.
 
+
 class Tag(models.Model):
     value = models.CharField(max_length=100)
-    
+
     def __str__(self):
         return self.value
+
 
 class Comment(models.Model):
     creator = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     content = models.TextField()
-    
+
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
-    content_object = GenericForeignKey('content_type', 'object_id')
-    
+    content_object = GenericForeignKey("content_type", "object_id")
+
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
-    
+
     def __str__(self):
-        return f'{self.creator}.comment.{self.id}'
+        return f"{self.creator}.comment.{self.id}"
+
 
 class Post(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
@@ -31,13 +34,23 @@ class Post(models.Model):
     slug = models.SlugField()
     summary = models.TextField(max_length=500)
     content = models.TextField()
-    
-    tags = models.ManyToManyField(Tag, related_name='posts', blank=True)
+
+    tags = models.ManyToManyField(Tag, related_name="posts", blank=True)
     comments = GenericRelation(Comment)
-    
+
     created_at = models.DateTimeField(auto_now_add=True)
     modified_at = models.DateTimeField(auto_now=True)
-    published_at = models.DateTimeField(blank=True, null=True)
-    
+    published_at = models.DateTimeField(blank=True, null=True, db_index=True)
+
     def __str__(self):
         return self.title
+
+
+class AuthorProfile(models.Model):
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="profile"
+    )
+    bio = models.TextField()
+
+    def __str__(self):
+        return f"{self.__class__.__name__} object for {self.user}"

@@ -4,7 +4,8 @@ from django.db import models
 from .models import (
     Tag,
     Post,
-    Comment
+    Comment,
+    AuthorProfile
 )
 from django.contrib.contenttypes.admin import GenericTabularInline
 
@@ -77,3 +78,4 @@ class PostAdmin(admin.ModelAdmin):
 admin.site.register(Post, PostAdmin)
 admin.site.register(Tag, TagAdmin)
 admin.site.register(Comment, CommentAdmin)
+admin.site.register(AuthorProfile)

@@ -8,7 +8,7 @@ from .models import Post
 
 
 def index(request):
-    posts = Post.objects.filter(published_at__lte=timezone.now())
+    posts = Post.objects.filter(published_at__lte=timezone.now()).select_related('author')
     return render(request, "blog/index.html", {"posts": posts})
 
 
