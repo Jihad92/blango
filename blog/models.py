@@ -32,7 +32,7 @@ class Post(models.Model):
     summary = models.TextField(max_length=500)
     content = models.TextField()
     
-    tags = models.ManyToManyField(Tag, related_name='posts')
+    tags = models.ManyToManyField(Tag, related_name='posts', blank=True)
     comments = GenericRelation(Comment)
     
     created_at = models.DateTimeField(auto_now_add=True)
