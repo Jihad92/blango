@@ -52,7 +52,7 @@ class Dev(Configuration):
         # allauth
         'allauth',
         'allauth.account',
-        # 'allauth.socialaccount',
+        'allauth.socialaccount',
         
         'debug_toolbar',
         'crispy_forms',
@@ -162,6 +162,12 @@ class Dev(Configuration):
     ]
     SITE_ID = 1
     # SOCIALACCOUNT_PROVIDERS = {} # allauth OAuth2 TODO
+    ACCOUNT_USER_MODEL_USERNAME_FIELD = None
+    ACCOUNT_EMAIL_REQUIRED = True
+    ACCOUNT_USERNAME_REQUIRED = False
+    ACCOUNT_AUTHENTICATION_METHOD = 'email'
+    ACCOUNT_EMAIL_VERIFICATION = 'none' # temp
+    LOGIN_REDIRECT_URL = 'index'
 
 class Prod(Dev):
     DEBUG = False
