@@ -1,8 +1,12 @@
 from django.utils import timezone
 from django.shortcuts import render, get_object_or_404, redirect
 from rest_framework import generics
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 
 from .api.serializers import PostSerializer
+from .api.permissions import AuthorModifyOrReadOnly, IsAdminUserForObject
 from .forms import CommentForm
 from .models import Post
 
@@ -46,3 +50,4 @@ class PostList(generics.ListCreateAPIView):
 class PostDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+    permission_classes = [AuthorModifyOrReadOnly | IsAdminUserForObject]

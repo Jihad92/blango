@@ -24,6 +24,7 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     
     path('auth/', include('blango_auth.urls')),
+    path('auth/', include('rest_framework.urls')),
     path('', include('blog.urls')),
 ]
 
