@@ -3,7 +3,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from rest_framework import generics
 
 from blango_auth.models import User
-from .api.serializers import PostSerializer, UserSerializer
+from .api.serializers import PostSerializer, UserSerializer, PostDetailSerializer
 from .api.permissions import AuthorModifyOrReadOnly, IsAdminUserForObject
 from .forms import CommentForm
 from .models import Post
@@ -47,7 +47,7 @@ class PostList(generics.ListCreateAPIView):
 
 class PostDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Post.objects.all()
-    serializer_class = PostSerializer
+    serializer_class = PostDetailSerializer
     permission_classes = [AuthorModifyOrReadOnly | IsAdminUserForObject]
 
 class UserDetail(generics.RetrieveAPIView):
