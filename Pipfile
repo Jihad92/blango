@@ -11,6 +11,7 @@ django-configurations = "*"
 dj-database-url = "*"
 django-debug-toolbar = "*"
 django-allauth = "*"
+djangorestframework = "*"
 
 [dev-packages]
 black = "*"

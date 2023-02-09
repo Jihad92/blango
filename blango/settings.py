@@ -54,6 +54,8 @@ class Dev(Configuration):
         'allauth.account',
         'allauth.socialaccount',
         
+        'rest_framework',
+        
         'debug_toolbar',
         'crispy_forms',
         'crispy_bootstrap5',

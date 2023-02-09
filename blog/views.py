@@ -1,6 +1,8 @@
 from django.utils import timezone
 from django.shortcuts import render, get_object_or_404, redirect
+from rest_framework import generics
 
+from .api.serializers import PostSerializer
 from .forms import CommentForm
 from .models import Post
 
@@ -35,3 +37,12 @@ def post_detail(request, slug):
             "comment_form": comment_form,
         },
     )
+
+# api
+class PostList(generics.ListCreateAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
+
+class PostDetail(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Post.objects.all()
+    serializer_class = PostSerializer
