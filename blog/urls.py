@@ -9,5 +9,6 @@ urlpatterns = [
     # api
     path("posts", views.PostList.as_view(), name="post-list"),
     path("posts/<int:pk>", views.PostDetail.as_view(), name="post-detail"),
+    path("users/<str:email>", views.UserDetail.as_view(), name="api_user_detail"),    
     path("token-auth/", auth_views.obtain_auth_token),
 ]
