@@ -47,7 +47,7 @@ class Dev(Configuration):
         "django.contrib.sessions",
         "django.contrib.messages",
         "django.contrib.staticfiles",
-        # allauth
+        "corsheaders",
         "allauth",
         "allauth.account",
         "allauth.socialaccount",
@@ -58,9 +58,11 @@ class Dev(Configuration):
         "crispy_bootstrap5",
         "blango_auth",
         "blog",
+        "drf_yasg",
     ]
 
     MIDDLEWARE = [
+        'corsheaders.middleware.CorsMiddleware',
         "debug_toolbar.middleware.DebugToolbarMiddleware",
         "django.middleware.security.SecurityMiddleware",
         "django.contrib.sessions.middleware.SessionMiddleware",
@@ -70,6 +72,12 @@ class Dev(Configuration):
         "django.contrib.messages.middleware.MessageMiddleware",
         "django.middleware.clickjacking.XFrameOptionsMiddleware",
     ]
+    
+    CORS_ORIGIN_ALLOW_ALL = True
+    # CORS_ORIGIN_ALLOW_ALL = False
+    # CORS_ORIGIN_WHITELIST = (
+    #     'http://localhost:8000',
+    # )
 
     ROOT_URLCONF = "blango.urls"
 
@@ -171,7 +179,14 @@ class Dev(Configuration):
         ],
         "DEFAULT_PERMISSION_CLASSES": [
             "rest_framework.permissions.IsAuthenticatedOrReadOnly",
-        ]
+        ],
+    }
+
+    SWAGGER_SETTINGS = {
+        "SECURITY_DEFINITIONS": {
+            "Token": {"type": "apiKey", "name": "Authorization", "in": "header"},
+            "Basic": {"type": "basic"},
+        }
     }
 
 

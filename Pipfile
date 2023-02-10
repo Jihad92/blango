@@ -12,6 +12,8 @@ dj-database-url = "*"
 django-debug-toolbar = "*"
 django-allauth = "*"
 djangorestframework = "*"
+drf-yasg = "*"
+django-cors-headers = "*"
 
 [dev-packages]
 black = "*"
