@@ -19,16 +19,14 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    
-    path('accounts/', include('allauth.urls')),
-    
-    path('auth/', include('blango_auth.urls')),
-    path('auth/', include('rest_framework.urls')),
-    path('', include('blog.urls')),
+    path("admin/", admin.site.urls),
+    path("accounts/", include("allauth.urls")),
+    path("", include("blango_auth.urls")),
+    path("auth/", include("rest_framework.urls")),
+    path("", include("blog.urls")),
 ]
 
 if settings.DEBUG:
     urlpatterns += [
-        path('__debug__/', include('debug_toolbar.urls')),
+        path("__debug__/", include("debug_toolbar.urls")),
     ]
