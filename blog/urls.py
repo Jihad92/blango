@@ -25,6 +25,11 @@ urlpatterns = [
     path("post/<slug>", views.post_detail, name="blog-post-detail"),
     # api
     path("", include(router.urls)),
+    path(
+        "posts/by-time/<str:period_name>/",
+        views.PostViewSet.as_view({"get": "list"}),
+        name="posts-by-time",
+    ),
     path("users/<str:email>", views.UserDetail.as_view(), name="api_user_detail"),
     path("token-auth/", auth_views.obtain_auth_token),
     # swagger api

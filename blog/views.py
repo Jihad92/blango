@@ -1,9 +1,11 @@
+from datetime import timedelta
+from django.http import Http404
 from django.utils import timezone
 from django.utils.decorators import method_decorator
 from django.views.decorators.cache import cache_page
 from django.views.decorators.vary import vary_on_cookie, vary_on_headers
 from django.shortcuts import render, get_object_or_404, redirect
-
+from django.db.models import Q
 from rest_framework.exceptions import PermissionDenied
 from rest_framework import generics, viewsets
 from rest_framework.decorators import action
@@ -17,6 +19,7 @@ from .api.serializers import (
     PostDetailSerializer,
     TagSerializer,
 )
+from .api.filters import PostFilterSet
 from .api.permissions import AuthorModifyOrReadOnly, IsAdminUserForObject
 from .forms import CommentForm
 from .models import Post, Tag
@@ -71,7 +74,7 @@ class TagViewSet(viewsets.ModelViewSet):
     queryset = Tag.objects.all()
     serializer_class = TagSerializer
 
-    @method_decorator(cache_page(300))
+    # @method_decorator(cache_page(300))
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
 
@@ -82,6 +85,14 @@ class TagViewSet(viewsets.ModelViewSet):
     @action(methods=["GET"], detail=True, name="Posts with the tag")
     def posts(self, request, pk=None):
         tag = self.get_object()
+
+        page = self.paginate_queryset(tag.posts.all())
+        if page is not None:
+            post_serializer = PostSerializer(
+                page, many=True, context={"request": request}
+            )
+            return self.get_paginated_response(post_serializer.data)
+
         post_serializer = PostSerializer(
             tag.posts, many=True, context={"request": request}
         )
@@ -91,8 +102,10 @@ class TagViewSet(viewsets.ModelViewSet):
 class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     # permission_classes = [AuthorModifyOrReadOnly | IsAdminUserForObject]
+    filterset_class = PostFilterSet
+    ordering_fields = ["published_at", "author", "title", "slug"]
 
-    @method_decorator(cache_page(300))
+    # @method_decorator(cache_page(300))
     @method_decorator(vary_on_headers("Authorization"))
     @method_decorator(vary_on_cookie)
     @action(methods=["GET"], detail=False, name="Posts by the logged in user")
@@ -100,10 +113,17 @@ class PostViewSet(viewsets.ModelViewSet):
         if request.user.is_anonymous:
             raise PermissionDenied("You must be logged in to see which posts are yours")
         posts = self.get_queryset().filter(author=request.user)
+
+        page = self.paginate_queryset(posts)
+        if page is not None:
+            serializer = PostSerializer(page, many=True, context={"request": request})
+            return self.get_paginated_response(serializer.data)
+
         serializer = PostSerializer(posts, many=True, context={"request": request})
         return Response(serializer.data)
 
-    @method_decorator(cache_page(120))
+    # @method_decorator(cache_page(120))
+    @method_decorator(vary_on_headers("Authorization", "Cookie"))
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
 
@@ -118,3 +138,27 @@ class PostViewSet(viewsets.ModelViewSet):
         else:
             self.permission_classes = [AuthorModifyOrReadOnly | IsAdminUserForObject]
         return super().get_permissions()
+
+    def get_queryset(self):
+        if self.request.user.is_anonymous:
+            queryset = self.queryset.filter(published_at__lte=timezone.now())
+        if not self.request.user.is_staff:
+            queryset = self.queryset
+        else:
+            queryset = self.queryset.filter(
+                Q(published_at__lte=timezone.now()) | Q(author=self.request.user)
+            )
+        time_period_name = self.kwargs.get("period_name")
+        if not time_period_name:
+            return queryset
+        if time_period_name == "new":
+            return queryset.filter(
+                published_at__gte=timezone.now() - timedelta(hours=1)
+            )
+        elif time_period_name == "today":
+            return queryset.filter(published_at__date=timezone.now().date())
+        elif time_period_name == "week":
+            return queryset.filter(published_at__gte=timezone.now() - timedelta(days=7))
+        raise Http404(
+            f"Time period {time_period_name} is not valid, should be 'new', 'today' or 'week'"
+        )

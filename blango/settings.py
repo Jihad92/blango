@@ -48,6 +48,7 @@ class Dev(Configuration):
         "django.contrib.messages",
         "django.contrib.staticfiles",
         "corsheaders",
+        "django_filters",
         "allauth",
         "allauth.account",
         "allauth.socialaccount",
@@ -194,6 +195,12 @@ class Dev(Configuration):
             "user_sustained": "5000/day",
             "user_burst": "100/minuts",
         },
+        "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+        "PAGE_SIZE": 20,
+        "DEFAULT_FILTER_BACKENDS": [
+            "django_filters.rest_framework.DjangoFilterBackend",
+            "rest_framework.filters.OrderingFilter",
+        ],
     }
 
     SWAGGER_SETTINGS = {

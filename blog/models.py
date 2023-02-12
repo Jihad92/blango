@@ -8,6 +8,9 @@ from django.conf import settings
 
 class Tag(models.Model):
     value = models.CharField(max_length=100, unique=True)
+    
+    class Meta:
+        ordering = ["value"]
 
     def __str__(self):
         return self.value
@@ -42,6 +45,9 @@ class Post(models.Model):
     modified_at = models.DateTimeField(auto_now=True)
     published_at = models.DateTimeField(blank=True, null=True, db_index=True)
 
+    class Meta:
+        ordering = ["slug"]
+    
     def __str__(self):
         return self.title
 
