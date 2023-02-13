@@ -10,6 +10,8 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
+from datetime import timedelta
+
 from pathlib import Path
 from configurations import Configuration
 from configurations import values
@@ -60,6 +62,7 @@ class Dev(Configuration):
         "blango_auth",
         "blog",
         "drf_yasg",
+        "versatileimagefield",
     ]
 
     MIDDLEWARE = [
@@ -178,6 +181,7 @@ class Dev(Configuration):
             "rest_framework.authentication.BasicAuthentication",
             "rest_framework.authentication.SessionAuthentication",
             "rest_framework.authentication.TokenAuthentication",
+            "rest_framework_simplejwt.authentication.JWTAuthentication",
         ],
         "DEFAULT_PERMISSION_CLASSES": [
             "rest_framework.permissions.IsAuthenticatedOrReadOnly",
@@ -209,6 +213,14 @@ class Dev(Configuration):
             "Basic": {"type": "basic"},
         }
     }
+    
+    SIMPLE_JWT = {
+        "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
+        "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    }
+    
+    MEDIA_ROOT = BASE_DIR / "media"
+    MEDIA_URL = "/media/"
 
 
 class Prod(Dev):

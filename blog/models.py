@@ -2,6 +2,7 @@ from django.contrib.contenttypes.fields import GenericForeignKey, GenericRelatio
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.conf import settings
+from versatileimagefield.fields import VersatileImageField, PPOIField
 
 # Create your models here.
 
@@ -45,6 +46,9 @@ class Post(models.Model):
     modified_at = models.DateTimeField(auto_now=True)
     published_at = models.DateTimeField(blank=True, null=True, db_index=True)
 
+    hero_image = VersatileImageField(upload_to="hero_images", ppoi_field="ppoi", null=True, blank=True)
+    ppoi = PPOIField(null=True, blank=True)
+    
     class Meta:
         ordering = ["slug"]
     

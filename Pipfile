@@ -15,6 +15,10 @@ djangorestframework = "*"
 drf-yasg = "*"
 django-cors-headers = "*"
 django-filter = "*"
+djangorestframework-simplejwt = "*"
+pyjwt = "*"
+django-versatileimagefield = "*"
+python-magic-bin = "*"
 
 [dev-packages]
 black = "*"
