@@ -150,6 +150,9 @@ class Dev(Configuration):
     # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
     STATIC_URL = "static/"
+    # STATIC_DIRS = [
+    #     "blog/static/",
+    # ]
 
     # Default primary key field type
     # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -194,13 +197,13 @@ class Dev(Configuration):
             "blog.api.throttling.UserBurstThrottle",
         ],
         "DEFAULT_THROTTLE_RATES": {
-            "anon_sustained": "500/day",
-            "anon_burst": "10/minutes",
-            "user_sustained": "5000/day",
-            "user_burst": "100/minuts",
+            "anon_sustained": "50000/day",
+            "anon_burst": "1000/minutes",
+            "user_sustained": "500000/day",
+            "user_burst": "10000/minuts",
         },
         "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
-        "PAGE_SIZE": 20,
+        "PAGE_SIZE": 3,
         "DEFAULT_FILTER_BACKENDS": [
             "django_filters.rest_framework.DjangoFilterBackend",
             "rest_framework.filters.OrderingFilter",

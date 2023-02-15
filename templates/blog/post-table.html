@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Post Table{% endblock title %}
+
+{% block content %}
+    <div class="row">
+        <div class="col">
+            <div id="react_root"></div>
+        </div>
+    </div>
+    <script
+        src="https://unpkg.com/react@18/umd/react.production.min.js"
+        crossorigin></script>
+    <script
+        src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"
+        crossorigin></script>
+
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <script>
+        const postListUrl = '{{ post_list_url|escapejs }}';
+    </script>
+    <script type="text/babel" src="{% static 'blog/blog.js' %}"></script>
+{% endblock content %}

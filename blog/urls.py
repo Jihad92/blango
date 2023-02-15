@@ -24,6 +24,7 @@ schema_view = get_schema_view(
 urlpatterns = [
     path("", views.index, name="index"),
     path("post/<slug>", views.post_detail, name="blog-post-detail"),
+    path("post-table/", views.post_table, name="blog-post-table"),
     # api
     path("", include(router.urls)),
     path(

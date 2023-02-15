@@ -1,4 +1,5 @@
 from datetime import timedelta
+from django.urls import reverse
 from django.http import Http404
 from django.utils import timezone
 from django.utils.decorators import method_decorator
@@ -23,6 +24,7 @@ from .api.filters import PostFilterSet
 from .api.permissions import AuthorModifyOrReadOnly, IsAdminUserForObject
 from .forms import CommentForm
 from .models import Post, Tag
+from .pagination import CustomPageNumberPagination
 
 # Create your views here.
 
@@ -56,6 +58,12 @@ def post_detail(request, slug):
             "post": post,
             "comment_form": comment_form,
         },
+    )
+
+
+def post_table(request):
+    return render(
+        request, "blog/post-table.html", {"post_list_url": reverse("post-list")}
     )
 
 
@@ -103,6 +111,7 @@ class PostViewSet(viewsets.ModelViewSet):
     queryset = Post.objects.all()
     # permission_classes = [AuthorModifyOrReadOnly | IsAdminUserForObject]
     filterset_class = PostFilterSet
+    pagination_class = CustomPageNumberPagination
     ordering_fields = ["published_at", "author", "title", "slug"]
 
     # @method_decorator(cache_page(300))
